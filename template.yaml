@@ -2,8 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 # some metadata about the template itself
 metadata:
-  name: microservices-monorepo-template-by-SUNNY
-  title: Microservices Monorepo Template by SUNNY TYAGI JI
+  name: microservices-monorepo-template-by-SUNNY-T
+  title: Microservices Monorepo Template by SUNNY T
   description: A Template to setup a sourceloop based monorepo on Github
   tags:
     - sourceloop
@@ -13,7 +13,6 @@ metadata:
 spec:
   owner: backstage/techdocs-core
   type: service
-
   # these are the steps which are rendered in the frontend with the form input
   parameters:
     - title: Fill in the project and repo details
@@ -40,79 +39,36 @@ spec:
           ui:options:
             allowedHosts:
               - github.com
-    - title: choose the sourceloop service that you want to integrate
-      type: object
+    - title: Choose the sourceloop services that you want to integrate
       properties:
         services:
-          # type: 'string'
-          enum:
-            - authentication-service
-            - audit-service
-            - bpmn-service
-            - chat-service
-            - feature-toggle-service
-            - in-mail-service
-            - notification-service
-            - payment-service
-            - reporting-service
-            - scheduler-service
-            - search-service
-            - video-conferencing-service
-      allOf:
-      - if:
-          properties:
-            services:
-              const: authentication-service
-        then:
-          properties:
-            arcCdk:
-              type: string
-              enum:
-                - yes
-                - no
-          required:
-          - arcCdk
-    # - title: Choose the sourceloop services that you want to integrate
-    #   properties:
-    #     services:
-    #       title: Microservices
-    #       type: 'array'
-    #       ui:widget: 'checkboxes'
-    #       items:
-    #         type: 'string'
-    #         enum:
-    #           - authentication-service
-    #           - audit-service
-    #           - bpmn-service
-    #           - chat-service
-    #           - feature-toggle-service
-    #           - in-mail-service
-    #           - notification-service
-    #           - payment-service
-    #           - reporting-service
-    #           - scheduler-service
-    #           - search-service
-    #           - video-conferencing-service
-    #       uniqueItems: true
-    #   allOf:
-    #     - if:
-    #         properties:
-    #           services:
-    #             type: 'array'
-    #             items:
-    #               enum:
-    #                 - authentication-service
-    #       then:
-    #         properties:
-    #           icdk:
-    #             title: iCDK
-    #             type: boolean
-    #             default: false
+          title: Microservices
+          type: 'array'
+          ui:widget: 'checkboxes'
+          items:
+            type: 'string'
+            enum:
+              - authentication-service
+              - audit-service
+              - bpmn-service
+              - chat-service
+              - feature-toggle-service
+              - in-mail-service
+              - notification-service
+              - payment-service
+              - reporting-service
+              - scheduler-service
+              - search-service
+              - video-conferencing-service
+          uniqueItems: true
     - title: Include CDK
+      required:
+        - cdk
       properties:
         cdk:
           title: CDK
           type: boolean
+          default: false
     - title: Custom services
       properties:
         customServices:
@@ -164,7 +120,6 @@ spec:
         issuePrefix:
           title: Prefix to be used for issues
           type: 'string'
-
   # here's the steps that are executed in series in the scaffolder backend
   steps:
     - id: generate
@@ -219,7 +174,6 @@ spec:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
-
     - id: register
       name: Register
       action: catalog:register
@@ -227,7 +181,6 @@ spec:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: '/catalog-info.yml'
         optional: true
-
   output:
     remoteUrl: ${{ steps.publish.output.remoteUrl }}
     entityRef: ${{ steps.register.output.entityRef }}
